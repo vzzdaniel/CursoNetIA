@@ -1,7 +1,5 @@
-# Diagnosticar con evidencia y consultas separadas
+# Debugging
 
-Fase A/B; sólo lectura con el expediente, estado exacto, síntoma, reproducción y logs sanitizados. Aplica docs/multiagente-copilot.md y .github/copilot-instructions.md. En chats separados, A y B plantean hipótesis sin conocer el informe del otro.
+Sigue .github/copilot-instructions.md. Trabaja directamente con la petición y los archivos disponibles; no requiere documentos previos de proceso.
 
-Separa observaciones de hipótesis. Entrega tres hipótesis ordenadas, comprobación de bajo costo para cada una y siguiente acción. No atribuyas un error al framework sin evidencia ni pidas datos de clientes. El humano o implementador autorizado reproduce; las salidas reales vuelven al coordinador para contrastar hipótesis.
-
-Al identificar causa raíz, propone reparación mínima y prueba de regresión. El ingeniero decide y sólo el implementador aplica la corrección; Pruebas y Revisor comprueban el diff después. No ocultes errores desactivando validación, autorización o tests. Reporta quién ejecutó cada comprobación, resultado y pendientes; una hipótesis no es una causa confirmada.
+Diagnostica el error con el código, síntoma y salidas disponibles. Separa hechos de hipótesis y propone la reparación mínima. Con el rol Implementador, si el usuario pidió corregir, aplica la reparación y compruébala; con un rol lector, entrega diagnóstico y pasos.

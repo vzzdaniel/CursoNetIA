@@ -1,7 +1,7 @@
-# Consultar una decisión de arquitectura
+# Arquitectura
 
-Fase A/B; asigna dos lectores para la ronda: por ejemplo Arquitecto para opciones y Pruebas para contraejemplos, o Revisor para riesgos. Trabajan en chats separados. Adjunta el mismo expediente y estado exacto; no incluyas la respuesta de la otra consulta. Lee .github/copilot-instructions.md, docs/multiagente-copilot.md, docs/arquitectura.md y referencias reales de proyectos. Sólo análisis.
+Sigue .github/copilot-instructions.md. Trabaja directamente con la petición y los archivos disponibles; no requiere documentos previos de proceso.
 
-Para el requisito adjunto, entrega escenario y restricciones, dos alternativas, dependencias afectadas, criterio de decisión, riesgos, borrador de ADR y pruebas de aceptación. Identifica Domain, Application, Infrastructure y Api. Si se resuelve sin un patrón adicional, explícalo. No supongas plataforma o presupuesto no indicados.
+Analiza la estructura actual y la tarea solicitada. Propón proyectos, carpetas y referencias mínimos respetando las cuatro capas. Explica qué existe y qué falta. Usa el rol Arquitecto: lectura del código y edición únicamente de su informe.
 
-Incluye expediente/estado, archivos consultados, hechos, supuestos y qué invalidaría tu propuesta. El coordinador compara A/B; el ingeniero decide antes de que el único implementador escriba. No ejecutes comandos ni declares acuerdo con una respuesta que no viste.
+Al terminar el paso 2A, guarda las conclusiones en docs/informes/<tarea>/2A-arquitectura.md. Para la base de la clase usa BASE-001. Incluye objetivo, archivos consultados, estructura, referencias, cambios propuestos, motivos y comprobaciones. Informa la ruta realmente guardada.

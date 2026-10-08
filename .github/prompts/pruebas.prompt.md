@@ -1,7 +1,7 @@
-# Diseñar casos y evaluar evidencia independiente
+# Pruebas
 
-Fase A/B, D o V según encargo; rol Pruebas, sólo lectura. Aplica .github/copilot-instructions.md y docs/multiagente-copilot.md. Usa expediente y estado exacto. En consulta inicial A/B no leas el informe del otro ni el registro de esa ronda; entrega tu análisis separado. Antes de implementar, deriva casos de reglas confirmadas sin copiar la lógica de la propuesta del implementador.
+Sigue .github/copilot-instructions.md. Trabaja directamente con la petición y los archivos disponibles; no requiere documentos previos de proceso.
 
-Entrega matriz de requisito, entradas, resultado esperado, origen del esperado, capa y dependencia real/doble. Incluye límites, usuario no autorizado, recurso ajeno y regresión cuando correspondan. Explica qué defecto o mutación debería hacer fallar cada caso. No escribas tests ni implementación desde este rol: el único implementador los incorpora tras la decisión humana.
+Con el rol Pruebas, propone casos desde el comportamiento solicitado: entradas, resultado esperado y riesgo cubierto. Evalúa las pruebas y salidas disponibles sin inventar ejecución. El Implementador puede escribir y ejecutar las pruebas solicitadas.
 
-Después, evalúa tests y salidas reales: quién ejecutó qué, sobre qué diff, qué pasó y qué falta. El humano ejecuta verificación independiente; el implementador puede ejecutar comandos autorizados. Sin salida, marca «no ejecutado». No elimines pruebas fallidas ni trates SQLite como prueba de SQL Server. Devuelve brechas al Revisor e ingeniero, sin aprobación final.
+Al terminar el paso 2B, guarda los casos y conclusiones en docs/informes/<tarea>/2B-pruebas.md; para la base actual usa BASE-001. Incluye requisito, entrada, esperado, riesgo cubierto, evidencia y pendientes. Tu edición se limita al informe; no modifiques tests ni código. Informa la ruta guardada.

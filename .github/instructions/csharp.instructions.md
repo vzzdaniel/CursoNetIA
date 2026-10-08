@@ -24,3 +24,13 @@ applyTo: "**/*.cs"
 - Api usa Minimal APIs y delega el negocio a Application.
 - Conserva el mediador propio y Result donde ya se utilizan.
 - Realiza cambios pequeños dentro del alcance autorizado.
+
+## Datos y operaciones
+
+- Usa decimal para precios y cantidades monetarias.
+- Conserva el precio histórico de las líneas del pedido.
+- Valida las entradas antes de modificar el estado de una entidad.
+- Respeta la nulabilidad y trata explícitamente los valores ausentes.
+- Usa async/await para I/O y propaga CancellationToken.
+- Evita .Result y .Wait() en operaciones asincrónicas.
+- Respeta los tiempos de vida de los servicios existentes.

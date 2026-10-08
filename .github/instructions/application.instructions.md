@@ -2,8 +2,8 @@
 applyTo: "src/AulaPedidos.Application/**/*.cs"
 ---
 
-Modela comandos y consultas mediante el mediador y Result existentes. Un handler coordina un caso de uso; no recibe HttpContext ni conoce DbContext concreto. Usa puertos pequeños, DTOs explícitos, CancellationToken y límites de paginación. Recibe identidad obtenida por el endpoint desde el token validado, nunca del body como fuente confiable. Separa validación sintáctica, reglas de negocio y autorización de recursos.
+Application depende de Domain y coordina casos de uso mediante contratos. No uses HttpContext ni DbContext concreto. Usa async y CancellationToken para I/O. Reutiliza patrones existentes cuando realmente existan; no agregues mediador, Result o repositorios sin necesidad.
 
-Usa `IRepository<T>` para operaciones comunes de raíces `IAggregateRoot`; conserva interfaces específicas para SKU y listados por cliente. `GetByIdAsync` permite mutaciones de dominio con seguimiento; `GetByIdsAsync` es lectura sin seguimiento. Confirma mediante `IUnitOfWork`; mantén comprobaciones de dueño y versión e invalidación de caché. No expongas `IQueryable` ni añadas borrado físico genérico.
+Aplica el flujo de clase de .github/copilot-instructions.md: trabaja directamente con la petición y el contexto disponible, sin requisitos de documentos de proceso.
 
-En el protocolo multiagente, A propone coordinación/puertos y B busca accesos ajenos, doble ejecución y fallos parciales en el mismo expediente sin ver A. La síntesis y decisión humana preceden al único escritor. Pruebas verifica éxito y fallos observables desde requisitos; Revisor comprueba diff y fronteras. Identifica estado y evidencia real, incluidos límites de dobles, según docs/multiagente-copilot.md.
+En BASE-001 están solicitados Repository Pattern y la biblioteca Mediator de martinothamar: define IRepository<T> en Application/Abstractions y usa Mediator.Abstractions para mensajes y handlers cuando correspondan. No usar MediatR ni un mediador propio. No exponer IQueryable o detalles de persistencia. Consulta docs/paquetes/BASE-001-paquete-comun.md.
