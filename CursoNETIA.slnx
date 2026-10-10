@@ -5,4 +5,10 @@
     <Project Path="src/AulaPedidos.Domain/AulaPedidos.Domain.csproj" />
     <Project Path="src/AulaPedidos.Infrastructure/AulaPedidos.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/AulaPedidos.Api.IntegrationTests/AulaPedidos.Api.IntegrationTests.csproj" />
+    <Project Path="tests/AulaPedidos.Application.Tests/AulaPedidos.Application.Tests.csproj" />
+    <Project Path="tests/AulaPedidos.ArchitectureTests/AulaPedidos.ArchitectureTests.csproj" />
+    <Project Path="tests/AulaPedidos.Infrastructure.Tests/AulaPedidos.Infrastructure.Tests.csproj" />
+  </Folder>
 </Solution>

@@ -1,6 +1,11 @@
 @AulaPedidos.Api_HostAddress = http://localhost:5193
 
-GET {{AulaPedidos.Api_HostAddress}}/weatherforecast/
+GET {{AulaPedidos.Api_HostAddress}}/health
+Accept: application/json
+
+###
+
+GET {{AulaPedidos.Api_HostAddress}}/openapi/v1.json
 Accept: application/json
 
 ###
