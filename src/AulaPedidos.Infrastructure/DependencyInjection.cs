@@ -12,7 +12,7 @@ public static class DependencyInjection
     {
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(configuration);
-        //test
+
         var connectionString = configuration.GetConnectionString("AulaPedidos");
         if (string.IsNullOrWhiteSpace(connectionString))
         {
