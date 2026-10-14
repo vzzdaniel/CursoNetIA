@@ -1,10 +1,19 @@
-﻿using System.Reflection;
+using System.Reflection;
 using AulaPedidos.Application.Contracts.Persistence;
 
 namespace AulaPedidos.ArchitectureTests;
 
 public class ArchitectureTests
 {
+    [Fact]
+    public void Domain_ShouldNotReferenceOuterLayersOrPersistence()
+    {
+        var references = typeof(AulaPedidos.Domain.Products.Product).Assembly.GetReferencedAssemblies();
+        Assert.DoesNotContain(references, reference => reference.Name!.StartsWith("AulaPedidos.", StringComparison.Ordinal));
+        Assert.DoesNotContain(references, reference => reference.Name!.StartsWith("Microsoft.EntityFrameworkCore", StringComparison.Ordinal));
+        Assert.DoesNotContain(references, reference => reference.Name!.StartsWith("Microsoft.AspNetCore", StringComparison.Ordinal));
+    }
+
     [Fact]
     public void IRepository_ShouldExposeExpectedAsyncMethods()
     {

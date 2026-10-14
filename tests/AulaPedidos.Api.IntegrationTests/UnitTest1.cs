@@ -1,5 +1,4 @@
-﻿using System.Net;
-using Microsoft.AspNetCore.Hosting;
+using System.Net;
 using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace AulaPedidos.Api.IntegrationTests;
@@ -35,6 +34,5 @@ public class ApiTests
     }
 
     private static WebApplicationFactory<Program> CreateFactory(string environment) =>
-        new WebApplicationFactory<Program>()
-            .WithWebHostBuilder(builder => builder.UseEnvironment(environment));
+        new ProductApiFactory(environment);
 }
