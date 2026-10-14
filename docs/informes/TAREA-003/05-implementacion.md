@@ -84,3 +84,28 @@ Commit de código: `bcf5692b8d3a19d9c7e3c1886fcec4cfbdca50ae`; el informe poster
 - El listado no ofrece orden garantizado (no solicitado). Guid mal formado→404. SQLite conserva decimales exactamente como TEXT; HasPrecision(18,2) es metadato y no añade máximo ni redondeo. Estas decisiones están documentadas, no amplían el CRUD.
 - La API aplica migraciones al arrancar: necesita escritura en el esquema. Coordinar arranque multinstancia; una tabla Products manual previa sin historial requiere conciliación humana, no borrado automático.
 - La rama local se creó sin mover ni descartar cambios ajenos. Los archivos locales quedan sin staging/commit local; los commits de esta tarea se publicaron directamente mediante MCP y se verificaron con fetch. No se incluyeron los cambios ajenos de Infrastructure/DependencyInjection.cs (sólo un comentario), instrucciones, agentes, workflows o informes de otros roles.
+
+## Seguimiento — sincronización y verificación de publicación, 2026-10-13 19:06 (-06:00)
+
+Esta sección actualiza los estados anteriores sin eliminar su evidencia histórica.
+
+- Se recuperó la continuación de 86 líneas publicada en `fbddd100490c1255acee57b14c6f197acf08f33a`. Las 28 líneas locales eran exactamente su prefijo: se conservan todas, sin notas divergentes. Sólo se edita este informe.
+- Rama local verificada: `codex/tarea-003-product-crud`, HEAD local `05015fcc6a89bf1f29ce7e7ca527abb0a60984c5` (`clase 6`), árbol inicialmente limpio. No se publica ese commit ni se altera su historia. Remoto: PR #3 open/draft, head `fbddd100`, base `master` en `1a5a6f3302f036d9ba2be20c6a5032aed7ffe935`.
+- Comparación UTF-8 por SHA inmutable: los otros 24 archivos de la tarea coinciden con el remoto normalizando CRLF/newline final. No se cambian ni publican código, tests, dependencias, workflows, índice o informes ajenos.
+- Reejecutado `dotnet build CursoNETIA.slnx -c Release --nologo --tl:off -warnaserror -p:RunAnalyzersDuringBuild=true -v:minimal`: 0 advertencias, 0 errores. [Log local](../../../artifacts/tarea-003-followup/build.log).
+- Reejecutado `dotnet test CursoNETIA.slnx -c Release --no-build --nologo --tl:off --logger trx --results-directory artifacts/tarea-003-followup/tests -v:minimal`: 49/49 correctos, sin omitidas. [TRX locales](../../../artifacts/tarea-003-followup/tests/).
+- Leídos los XML retenidos: mantenido 236/239 (98.74 %), completo 445/827 (53.81 %). No se regeneró cobertura ni NuGet Audit en este seguimiento documental; se conserva su evidencia anterior del mismo código.
+- MCP en `fbddd100`: 0 checks, status pending con 0 statuses, reviews vacías y 0 threads. No se repite la solicitud de Copilot ya realizada para ese SHA. No se observa revisión completada ni configuración de revisión automática.
+- MCP confirma que `.github` en `master` no contiene workflows. Alertas Dependabot/code scanning, reglas de seguridad y Code Quality no son consultables con las herramientas expuestas; no se consideran aprobadas. La respuesta previa sobre Advanced Security es evidencia histórica, no verificación nueva. No se activan planes de pago.
+- Se publica únicamente este informe mediante MCP en la misma rama. La descripción del PR se actualiza con el head resultante, enlace al informe y controles pendientes. Para el nuevo head, si no hay solicitud/revisión automática visible, se ejecuta una única llamada a `request_copilot_review`; su respuesta y la consulta posterior se registran en la descripción del PR, sin crear commits recursivos sólo para registrar su propio SHA.
+
+| Control | Estado | Commit y evidencia del seguimiento |
+|---|---|---|
+| Compilación y analizadores (local) | correcto | Código sin cambios de fbddd100/bcf5692; [log](../../../artifacts/tarea-003-followup/build.log) |
+| Pruebas (local) | correcto | Código sin cambios de fbddd100/bcf5692; [49/49 TRX](../../../artifacts/tarea-003-followup/tests/) |
+| Cobertura ≥80 % / NuGet Audit (local, retenidos) | correcto | Mismo código; reportes y log anteriores, sin nueva medición/auditoría |
+| CI / Dependency Review remotos | pendiente | fbddd100; [checks sin resultados](https://github.com/vzzdaniel/CursoNetIA/pull/3/checks) |
+| Copilot code review | pendiente | fbddd100; [sin revisión observada](https://github.com/vzzdaniel/CursoNetIA/pull/3/files); solicitud previa no repetida |
+| CodeQL, alertas y controles de seguridad / Code Quality | no disponible | Sin workflow remoto ni acceso MCP a configuración/alertas; no acredita ausencia de vulnerabilidades |
+
+Pendientes humanos/de acceso: CI y controles de seguridad remotos, finalización de Copilot code review y sus posibles hallazgos. PR conservado como draft; sin aprobación, ready, auto-merge ni merge.
