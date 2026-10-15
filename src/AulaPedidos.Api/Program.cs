@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using AulaPedidos.Api.Endpoints;
 using AulaPedidos.Api.Errors;
 using AulaPedidos.Application;
@@ -15,8 +16,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.AddHealthChecks();
 builder.Services.AddProblemDetails();
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.Never;
+});
 builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
 builder.Services.AddExceptionHandler<ProductValidationExceptionHandler>();
+builder.Services.AddExceptionHandler<UnhandledExceptionHandler>();
 builder.Services.AddMediator(options =>
 {
     options.Assemblies =

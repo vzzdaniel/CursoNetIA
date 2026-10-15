@@ -1,12 +1,13 @@
 using System.Net;
 using System.Net.Http.Json;
+using System.Text.Json;
+using AulaPedidos.Api.Contracts;
 using AulaPedidos.Api.Errors;
 using AulaPedidos.Application.Contracts.Persistence;
 using AulaPedidos.Application.Products;
 using AulaPedidos.Domain.Products;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -36,12 +37,13 @@ public class ValidationEndpointTests
 
         using var response = await client.PostAsJsonAsync("/products", new { price = -1m, description = "SensitiveInputMarker" });
 
-        var problem = await ReadValidationProblem(response);
-        Assert.Equal(new[] { "First error", "Second error" }, problem.Errors["Description"]);
-        Assert.Single(problem.Errors["Price"]);
+        var result = await ReadValidationResult(response);
+        Assert.Equal(new[] { "First error", "Second error" }, result.Data!["Description"]);
+        Assert.Single(result.Data["Price"]);
         Assert.Equal(0, saveCalls);
         Assert.DoesNotContain("SensitiveInputMarker", await response.Content.ReadAsStringAsync());
-        Assert.Empty((await client.GetFromJsonAsync<ProductDto[]>("/products"))!);
+        using var productsResponse = await client.GetAsync("/products");
+        Assert.Empty((await ReadProductsResult(productsResponse)).Data!);
     }
 
     [Fact]
@@ -55,8 +57,8 @@ public class ValidationEndpointTests
 
         using var response = await client.GetAsync("/products");
 
-        var problem = await ReadValidationProblem(response);
-        Assert.Equal("Query rejected", Assert.Single(Assert.Single(problem.Errors).Value));
+        var result = await ReadValidationResult(response);
+        Assert.Equal("Query rejected", Assert.Single(Assert.Single(result.Data!).Value));
     }
 
     [Fact]
@@ -65,20 +67,21 @@ public class ValidationEndpointTests
         await using var factory = new ProductApiFactory("Production");
         using var client = factory.CreateClient();
         using var created = await client.PostAsJsonAsync("/products", new { price = 1m, description = "Original" });
-        var original = (await created.Content.ReadFromJsonAsync<ProductDto>())!;
+        var original = (await created.Content.ReadFromJsonAsync<Result<ProductDto>>())!.Data!;
 
         using var response = await client.PutAsJsonAsync(created.Headers.Location, new
         {
             price = -1m, description = " ", alternateDescription = new string('x', 201),
         });
 
-        var problem = await ReadValidationProblem(response);
-        Assert.Equal(new[] { "AlternateDescription", "Description", "Price" }, problem.Errors.Keys.Order());
-        Assert.Equal(original, await client.GetFromJsonAsync<ProductDto>(created.Headers.Location));
+        var result = await ReadValidationResult(response);
+        Assert.Equal(new[] { "AlternateDescription", "Description", "Price" }, result.Data!.Keys.Order());
+        using var currentResponse = await client.GetAsync(created.Headers.Location);
+        Assert.Equal(original, (await currentResponse.Content.ReadFromJsonAsync<Result<ProductDto>>())!.Data);
     }
 
     [Fact]
-    public async Task DomainValidationException_StillUsesExistingBadRequestContract()
+    public async Task DomainValidationException_ReturnsResultContract()
     {
         await using var factory = new ProductApiFactory("Production", services =>
             services.Replace(ServiceDescriptor.Scoped<IUnitOfWork>(_ => new CallbackUnitOfWork(() =>
@@ -87,18 +90,17 @@ public class ValidationEndpointTests
 
         using var response = await client.PostAsJsonAsync("/products", new { price = 1m, description = "Valid" });
 
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        var problem = (await response.Content.ReadFromJsonAsync<ProblemDetails>())!;
-        Assert.Equal("Invalid product", problem.Title);
-        Assert.Equal("Domain rule failed", problem.Detail);
+        var result = await ReadResult<object?>(response, HttpStatusCode.BadRequest);
+        Assert.False(result.IsSuccess);
+        Assert.Equal("Domain rule failed", result.Message);
+        Assert.Null(result.Data);
     }
 
     [Fact]
     public async Task ValidationExceptionHandler_DoesNotHandleCancellationOrUnexpectedFailures()
     {
         await using var factory = new ProductApiFactory();
-        using var client = factory.CreateClient();
-        var handler = ActivatorUtilities.CreateInstance<ValidationExceptionHandler>(factory.Services);
+        var handler = new ValidationExceptionHandler();
         var context = new DefaultHttpContext();
 
         Assert.False(await handler.TryHandleAsync(context, new OperationCanceledException(), default));
@@ -106,16 +108,35 @@ public class ValidationEndpointTests
         Assert.Equal(StatusCodes.Status200OK, context.Response.StatusCode);
     }
 
-    private static async Task<ValidationProblemDetails> ReadValidationProblem(HttpResponseMessage response)
+    private static async Task<Result<IReadOnlyDictionary<string, string[]>>> ReadValidationResult(HttpResponseMessage response)
     {
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        Assert.Equal("application/problem+json", response.Content.Headers.ContentType!.MediaType);
-        var problem = (await response.Content.ReadFromJsonAsync<ValidationProblemDetails>())!;
-        Assert.Equal(400, problem.Status);
-        Assert.Equal("Validation failed", problem.Title);
-        Assert.Null(problem.Detail);
-        Assert.NotEmpty(problem.Errors);
-        return problem;
+        var result = await ReadResult<IReadOnlyDictionary<string, string[]>>(response, HttpStatusCode.BadRequest);
+        Assert.False(result.IsSuccess);
+        Assert.Equal("Validation failed.", result.Message);
+        Assert.NotNull(result.Data);
+        Assert.NotEmpty(result.Data);
+        return result;
+    }
+
+    private static async Task<Result<IReadOnlyList<ProductDto>>> ReadProductsResult(HttpResponseMessage response)
+    {
+        var result = await ReadResult<IReadOnlyList<ProductDto>>(response, HttpStatusCode.OK);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Message);
+        return result;
+    }
+
+    private static async Task<Result<T>> ReadResult<T>(HttpResponseMessage response, HttpStatusCode expectedStatus)
+    {
+        Assert.Equal(expectedStatus, response.StatusCode);
+        Assert.Equal("application/json", response.Content.Headers.ContentType?.MediaType);
+        var json = await response.Content.ReadAsStringAsync();
+        using var document = JsonDocument.Parse(json);
+        Assert.True(document.RootElement.TryGetProperty("message", out _));
+        Assert.True(document.RootElement.TryGetProperty("data", out _));
+        var result = JsonSerializer.Deserialize<Result<T>>(json, new JsonSerializerOptions(JsonSerializerDefaults.Web));
+        Assert.NotNull(result);
+        return result;
     }
 
     private sealed class CallbackUnitOfWork(Func<int> save) : IUnitOfWork
