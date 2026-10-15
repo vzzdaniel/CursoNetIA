@@ -84,17 +84,17 @@
 
 | Control | Estado | Commit y evidencia |
 |---|---|---|
-| Compilación y analizadores | correcto | `dotnet build CursoNETIA.slnx` local correcto |
-| Pruebas | correcto | `dotnet test CursoNETIA.slnx` local: 70/70 |
-| Cobertura de líneas del código mantenido ≥ 80 % | fallido | Ejecución local con `XPlat Code Coverage`: 47.67 % combinado observado |
-| NuGet Audit y Dependency Review | en curso | PR #14 (`5fe9a68`): NuGet audit correcto, Dependency review fallido (`https://github.com/vzzdaniel/CursoNetIA/actions/runs/38806713132/job/116669339599`) |
-| CodeQL y alertas de seguridad | en curso | PR #14 (`5fe9a68`): CodeQL en ejecución (`https://github.com/vzzdaniel/CursoNetIA/actions/runs/38806713132/job/116669339709`) |
+| Compilación y analizadores | correcto | `5fe9a68` (código): `dotnet build CursoNETIA.slnx` local correcto |
+| Pruebas | correcto | `5fe9a68` (código): `dotnet test CursoNETIA.slnx` local: 70/70 |
+| Cobertura de líneas del código mantenido ≥ 80 % | fallido | `5fe9a68` (código): `XPlat Code Coverage` local 47.67 % combinado observado |
+| NuGet Audit y Dependency Review | en curso | `ae8e824` (head actual): NuGet audit en ejecución (`https://github.com/vzzdaniel/CursoNetIA/actions/runs/38806940287/job/116670109328`); no check Dependency Review visible para este head |
+| CodeQL y alertas de seguridad | pendiente | `ae8e824` (head actual): sin check CodeQL visible para este head |
 | Secret scanning / push protection | no disponible | No accesible desde las herramientas MCP disponibles en esta sesión |
-| Copilot code review | en curso | Solicitud enviada en PR #14 para `5fe9a68`; sin reseña publicada aún |
+| Copilot code review | en curso | Solicitud enviada en PR #14 para `5fe9a68` y repetida para `ae8e824`; sin reseña publicada aún |
 | GitHub Code Quality, si está habilitado | pendiente | Sin check visible de Code Quality en PR #14 |
 
 ## Pendientes
 
-1. Corregir o justificar el fallo de `Dependency review` del commit `5fe9a68`.
-2. Esperar finalización y resultado de `Build, tests and coverage`, `CodeQL (C#)` y `submit-nuget` para el commit vigente.
+1. Esperar finalización y resultado de `Build, tests and coverage` y `NuGet audit` del head actual `ae8e824`.
+2. Confirmar si para el head actual se ejecutan o no `Dependency review` y `CodeQL`.
 3. Verificar publicación de revisión de Copilot sobre el commit actual y atender hallazgos dentro de alcance.
