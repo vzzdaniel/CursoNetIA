@@ -1,6 +1,7 @@
 using AulaPedidos.Api.Endpoints;
 using AulaPedidos.Api.Errors;
 using AulaPedidos.Application;
+using AulaPedidos.Application.Validation;
 using AulaPedidos.Infrastructure;
 using AulaPedidos.Infrastructure.Persistence;
 using Mediator;
@@ -14,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.AddHealthChecks();
 builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
 builder.Services.AddExceptionHandler<ProductValidationExceptionHandler>();
 builder.Services.AddMediator(options =>
 {
@@ -22,6 +24,7 @@ builder.Services.AddMediator(options =>
         typeof(AulaPedidos.Application.DependencyInjection).Assembly,
     ];
     options.ServiceLifetime = ServiceLifetime.Scoped;
+    options.PipelineBehaviors = [typeof(ValidationBehavior<,>)];
 });
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
