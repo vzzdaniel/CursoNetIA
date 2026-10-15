@@ -78,7 +78,7 @@
 
 - **Issue:** `#13` — https://github.com/vzzdaniel/CursoNetIA/issues/13
 - **Rama remota de trabajo:** `codex/tarea-005-result-api-excepciones`
-- **Draft PR:** pendiente de creación/actualización en este informe.
+- **Draft PR:** `#14` — https://github.com/vzzdaniel/CursoNetIA/pull/14
 
 ## Estado de controles en esta entrega
 
@@ -87,14 +87,14 @@
 | Compilación y analizadores | correcto | `dotnet build CursoNETIA.slnx` local correcto |
 | Pruebas | correcto | `dotnet test CursoNETIA.slnx` local: 70/70 |
 | Cobertura de líneas del código mantenido ≥ 80 % | fallido | Ejecución local con `XPlat Code Coverage`: 47.67 % combinado observado |
-| NuGet Audit y Dependency Review | pendiente | Sin evidencia local del commit remoto |
-| CodeQL y alertas de seguridad | pendiente | Sin evidencia local del commit remoto |
+| NuGet Audit y Dependency Review | en curso | PR #14 (`5fe9a68`): NuGet audit correcto, Dependency review fallido (`https://github.com/vzzdaniel/CursoNetIA/actions/runs/38806713132/job/116669339599`) |
+| CodeQL y alertas de seguridad | en curso | PR #14 (`5fe9a68`): CodeQL en ejecución (`https://github.com/vzzdaniel/CursoNetIA/actions/runs/38806713132/job/116669339709`) |
 | Secret scanning / push protection | no disponible | No accesible desde las herramientas MCP disponibles en esta sesión |
-| Copilot code review | pendiente | Se solicitará tras abrir el draft PR |
-| GitHub Code Quality, si está habilitado | pendiente | Pendiente de verificar en checks del PR |
+| Copilot code review | en curso | Solicitud enviada en PR #14 para `5fe9a68`; sin reseña publicada aún |
+| GitHub Code Quality, si está habilitado | pendiente | Sin check visible de Code Quality en PR #14 |
 
 ## Pendientes
 
-1. Publicar estos cambios en la rama remota y abrir/actualizar draft PR.
-2. Solicitar revisión automática con `request_copilot_review` en el PR real.
-3. Revisar checks y alertas del commit actual del PR para actualizar estado de controles remotos.
+1. Corregir o justificar el fallo de `Dependency review` del commit `5fe9a68`.
+2. Esperar finalización y resultado de `Build, tests and coverage`, `CodeQL (C#)` y `submit-nuget` para el commit vigente.
+3. Verificar publicación de revisión de Copilot sobre el commit actual y atender hallazgos dentro de alcance.
