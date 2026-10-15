@@ -1,0 +1,3 @@
+chore: re-run workflows after CodeQL permissions fix
+
+This file is intentionally empty. It's only used to produce an empty commit to re-run GitHub Actions so the Security workflow uses the updated permissions in .github/workflows/security.yml.
