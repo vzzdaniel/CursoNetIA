@@ -101,7 +101,7 @@ public class ProductEndpointTests
         using var put = await client.PutAsJsonAsync($"/products/{id}", new { price = 1m, description = "Valid" });
         using var delete = await client.DeleteAsync($"/products/{id}");
         Assert.Equal(HttpStatusCode.NotFound, get.StatusCode);
-        Assert.Equal(HttpStatusCode.NotFound, put.StatusCode);
+        Assert.Equal(id == Guid.Empty.ToString() ? HttpStatusCode.BadRequest : HttpStatusCode.NotFound, put.StatusCode);
         Assert.Equal(HttpStatusCode.NotFound, delete.StatusCode);
     }
 
@@ -143,9 +143,10 @@ public class ProductEndpointTests
     {
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType!.MediaType);
-        var problem = (await response.Content.ReadFromJsonAsync<ProblemDetails>())!;
+        var problem = (await response.Content.ReadFromJsonAsync<ValidationProblemDetails>())!;
         Assert.Equal(400, problem.Status);
-        Assert.Equal("Invalid product", problem.Title);
-        Assert.NotNull(problem.Detail);
+        Assert.Equal("Validation failed", problem.Title);
+        Assert.NotEmpty(problem.Errors);
+        Assert.Null(problem.Detail);
     }
 }

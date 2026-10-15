@@ -1,3 +1,4 @@
+using FluentValidation;
 using Mediator;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,6 +10,7 @@ public static class DependencyInjection
     {
         ArgumentNullException.ThrowIfNull(services);
 
+        services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
         services.AddScoped<ISender>(serviceProvider => serviceProvider.GetRequiredService<IMediator>());
         services.AddScoped<IPublisher>(serviceProvider => serviceProvider.GetRequiredService<IMediator>());
 
