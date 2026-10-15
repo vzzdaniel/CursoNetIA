@@ -7,5 +7,6 @@ Usa la [convención de informes](README.md) para identificar una tarea o asignar
 | TAREA-001 | Base técnica de AulaPedidos | BASE-001 | `docs/informes/TAREA-001/` | [Expediente](../expedientes/BASE-001.md), [informes](Base-001/) |
 | TAREA-002 | Repository y Unit of Work con EF Core y SQLite | BASE-002; BASE-002-repository-unit-of-work | `docs/informes/TAREA-002/` | [Expediente](../expedientes/BASE-002.md), [expediente adicional](../expedientes/BASE-002-repository-unit-of-work.md), [informes](BASE-002/), [arquitectura fuera de informes](../Base-002/2A-Arquitectura.md) |
 | TAREA-003 | CRUD de productos | Producto-003 | `docs/informes/TAREA-003/` | [Expediente](../expedientes/Producto-003.md) |
+| TAREA-005 | Contrato Result en Api y manejo global de excepciones | 007-Result; Result-Api-Excepciones | `docs/informes/TAREA-005/` | [Borrador ADR](../adr/007-Result.md) |
 
 Los alias se comparan sin distinguir mayúsculas y minúsculas. No renombres carpetas históricas por esa comparación. Las filas reservan sus números aunque todavía no exista la carpeta canónica.
