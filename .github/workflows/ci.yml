@@ -88,6 +88,15 @@ jobs:
           --results-directory "${{ github.workspace }}/TestResults/infrastructure"
           -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura
 
+      - name: Run application tests with coverage
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: >-
+          dotnet test tests/AulaPedidos.Application.Tests/AulaPedidos.Application.Tests.csproj
+          --configuration Release --no-build --no-restore --logger trx
+          --collect:"XPlat Code Coverage"
+          --results-directory "${{ github.workspace }}/TestResults/application"
+          -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura
+
       - name: Run API integration tests with coverage
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: >-
@@ -105,7 +114,7 @@ jobs:
         shell: bash
         run: |
           shopt -s nullglob
-          for suite in infrastructure api; do
+          for suite in application infrastructure api; do
             # TRX creates additional copies under <run>/In/<machine>/.
             # Use only the collector's original <guid>/coverage file.
             reports=(TestResults/"$suite"/*/coverage.cobertura.xml)
@@ -127,11 +136,11 @@ jobs:
         # are outside the maintained-source threshold; no source files are hidden.
         run: |
           dotnet tool run reportgenerator \
-            "-reports:TestResults/infrastructure/*/coverage.cobertura.xml;TestResults/api/*/coverage.cobertura.xml" \
+            "-reports:TestResults/application/*/coverage.cobertura.xml;TestResults/infrastructure/*/coverage.cobertura.xml;TestResults/api/*/coverage.cobertura.xml" \
             "-targetdir:CoverageRaw" \
             "-reporttypes:Cobertura;MarkdownSummaryGithub"
           dotnet tool run reportgenerator \
-            "-reports:TestResults/infrastructure/*/coverage.cobertura.xml;TestResults/api/*/coverage.cobertura.xml" \
+            "-reports:TestResults/application/*/coverage.cobertura.xml;TestResults/infrastructure/*/coverage.cobertura.xml;TestResults/api/*/coverage.cobertura.xml" \
             "-targetdir:CoverageReport" \
             "-reporttypes:Cobertura;MarkdownSummaryGithub;HtmlInline_AzurePipelines" \
             "-filefilters:-**/obj/**"

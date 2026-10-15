@@ -14,7 +14,7 @@ public static class ProductEndpoints
         {
             var product = await sender.Send(new CreateProduct(request.Price, request.Description, request.AlternateDescription), cancellationToken);
             return TypedResults.Created($"/products/{product.Id}", product);
-        }).ProducesProblem(StatusCodes.Status400BadRequest);
+        }).ProducesValidationProblem(StatusCodes.Status400BadRequest);
 
         group.MapGet("/", async (ISender sender, CancellationToken cancellationToken) =>
             TypedResults.Ok(await sender.Send(new GetProducts(), cancellationToken)));
@@ -29,7 +29,7 @@ public static class ProductEndpoints
         {
             var product = await sender.Send(new UpdateProduct(id, request.Price, request.Description, request.AlternateDescription), cancellationToken);
             return product is null ? TypedResults.NotFound() : TypedResults.Ok(product);
-        }).ProducesProblem(StatusCodes.Status400BadRequest);
+        }).ProducesValidationProblem(StatusCodes.Status400BadRequest);
 
         group.MapDelete("/{id:guid}", async Task<Results<NoContent, NotFound>> (Guid id, ISender sender, CancellationToken cancellationToken) =>
             await sender.Send(new DeleteProduct(id), cancellationToken) ? TypedResults.NoContent() : TypedResults.NotFound());
