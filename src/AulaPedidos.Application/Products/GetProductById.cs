@@ -1,10 +1,14 @@
+using AulaPedidos.Application.Caching;
 using AulaPedidos.Application.Contracts.Persistence;
 using AulaPedidos.Domain.Products;
 using Mediator;
 
 namespace AulaPedidos.Application.Products;
 
-public sealed record GetProductById(Guid Id) : IQuery<ProductDto?>;
+public sealed record GetProductById(Guid Id) : IQuery<ProductDto?>, ICachedQuery
+{
+    public string CacheKey => ProductCacheKeys.ById(Id);
+}
 
 public sealed class GetProductByIdHandler(IRepository<Product> repository) : IQueryHandler<GetProductById, ProductDto?>
 {

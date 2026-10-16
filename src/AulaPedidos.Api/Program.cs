@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 using AulaPedidos.Api.Endpoints;
 using AulaPedidos.Api.Errors;
 using AulaPedidos.Application;
+using AulaPedidos.Application.Caching;
 using AulaPedidos.Application.Validation;
 using AulaPedidos.Infrastructure;
 using AulaPedidos.Infrastructure.Persistence;
@@ -30,8 +31,15 @@ builder.Services.AddMediator(options =>
         typeof(AulaPedidos.Application.DependencyInjection).Assembly,
     ];
     options.ServiceLifetime = ServiceLifetime.Scoped;
-    options.PipelineBehaviors = [typeof(ValidationBehavior<,>)];
+    options.PipelineBehaviors =
+        [
+            typeof(ValidationBehavior<,>),
+            typeof(CachingBehavior<,>),
+            typeof(CacheInvalidationBehavior<,>),
+        ];
 });
+builder.Services.AddMemoryCache();
+builder.Services.Configure<ProductCacheOptions>(builder.Configuration.GetSection(ProductCacheOptions.SectionName));
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 

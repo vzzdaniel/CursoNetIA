@@ -1,10 +1,14 @@
+using AulaPedidos.Application.Caching;
 using AulaPedidos.Application.Contracts.Persistence;
 using AulaPedidos.Domain.Products;
 using Mediator;
 
 namespace AulaPedidos.Application.Products;
 
-public sealed record DeleteProduct(Guid Id) : ICommand<bool>;
+public sealed record DeleteProduct(Guid Id) : ICommand<bool>, ICacheInvalidatingCommand
+{
+    public IReadOnlyCollection<string> CacheKeysToInvalidate => [ProductCacheKeys.ById(Id), ProductCacheKeys.All];
+}
 
 public sealed class DeleteProductHandler(IRepository<Product> repository, IUnitOfWork unitOfWork)
     : ICommandHandler<DeleteProduct, bool>
