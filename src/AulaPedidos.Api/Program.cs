@@ -66,6 +66,7 @@ if (app.Environment.IsDevelopment())
 
 app.MapHealthChecks("/health");
 app.MapProductEndpoints();
+app.MapDiscountEndpoints();
 
 app.Run();
 

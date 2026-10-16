@@ -1,9 +1,13 @@
+using AulaPedidos.Application.Contracts.Discounts;
 using AulaPedidos.Application.Contracts.Persistence;
+using AulaPedidos.Infrastructure.Discounts;
 using AulaPedidos.Infrastructure.Persistence;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Http.Resilience;
+using Polly;
 
 namespace AulaPedidos.Infrastructure;
 
@@ -25,6 +29,25 @@ public static class DependencyInjection
         _ = services.AddDbContext<AulaPedidosDbContext>(options => options.UseSqlite(connectionString));
         _ = services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
         _ = services.AddScoped<IUnitOfWork, EfUnitOfWork>();
+
+        var discountBaseUrl = configuration["ProductDiscount:BaseUrl"];
+        if (string.IsNullOrWhiteSpace(discountBaseUrl))
+        {
+            discountBaseUrl = "http://localhost:5193";
+        }
+
+        _ = services.AddHttpClient<IProductDiscountClient, ProductDiscountClient>(client => client.BaseAddress = new Uri(discountBaseUrl))
+            .AddResilienceHandler("product-discount", pipeline =>
+            {
+                _ = pipeline.AddCircuitBreaker(new HttpCircuitBreakerStrategyOptions
+                {
+                    SamplingDuration = TimeSpan.FromSeconds(10),
+                    MinimumThroughput = 5,
+                    FailureRatio = 1.0,
+                    BreakDuration = TimeSpan.FromSeconds(15),
+                });
+                _ = pipeline.AddTimeout(TimeSpan.FromSeconds(2));
+            });
 
         return services;
     }

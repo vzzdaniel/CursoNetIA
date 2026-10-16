@@ -8,6 +8,11 @@ namespace AulaPedidos.Infrastructure.Tests;
 
 public class ProductPersistenceTests
 {
+    private sealed class NoDiscountClient : AulaPedidos.Application.Contracts.Discounts.IProductDiscountClient
+    {
+        public ValueTask<int?> GetDiscountPercentageAsync(CancellationToken cancellationToken) => ValueTask.FromResult<int?>(null);
+    }
+
     [Fact]
     public async Task HandlersPersistCrudThroughExistingRepositoryAndUnitOfWork()
     {
@@ -22,7 +27,7 @@ public class ProductPersistenceTests
         var update = new UpdateProductHandler(repository, unitOfWork);
         var delete = new DeleteProductHandler(repository, unitOfWork);
         var get = new GetProductByIdHandler(repository);
-        var list = new GetProductsHandler(repository);
+        var list = new GetProductsHandler(repository, new NoDiscountClient());
 
         Assert.Empty(await list.Handle(new GetProducts(), default));
         var product = await create.Handle(new CreateProduct(12.34m, " Original ", null), default);
