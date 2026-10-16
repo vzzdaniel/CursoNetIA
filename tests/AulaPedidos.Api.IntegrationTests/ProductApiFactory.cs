@@ -25,6 +25,7 @@ internal sealed class ProductApiFactory : WebApplicationFactory<Program>
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseEnvironment(environment);
+        builder.UseSetting("Database:MigrateOnStartup", "true");
         builder.ConfigureServices(services =>
         {
             services.RemoveAll<DbContextOptions<AulaPedidosDbContext>>();
