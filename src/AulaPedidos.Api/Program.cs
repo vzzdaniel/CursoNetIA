@@ -3,6 +3,7 @@ using AulaPedidos.Api.Endpoints;
 using AulaPedidos.Api.Errors;
 using AulaPedidos.Application;
 using AulaPedidos.Application.Caching;
+using AulaPedidos.Application.Products.BulkImport;
 using AulaPedidos.Application.Validation;
 using AulaPedidos.Infrastructure;
 using AulaPedidos.Infrastructure.Persistence;
@@ -40,6 +41,7 @@ builder.Services.AddMediator(options =>
 });
 builder.Services.AddMemoryCache();
 builder.Services.Configure<ProductCacheOptions>(builder.Configuration.GetSection(ProductCacheOptions.SectionName));
+builder.Services.Configure<BulkImportOptions>(builder.Configuration.GetSection(BulkImportOptions.SectionName));
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 

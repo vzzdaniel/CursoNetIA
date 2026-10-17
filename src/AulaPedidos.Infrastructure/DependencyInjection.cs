@@ -1,5 +1,7 @@
+using AulaPedidos.Application.Contracts.BulkImport;
 using AulaPedidos.Application.Contracts.Discounts;
 using AulaPedidos.Application.Contracts.Persistence;
+using AulaPedidos.Infrastructure.BulkImport;
 using AulaPedidos.Infrastructure.Discounts;
 using AulaPedidos.Infrastructure.Persistence;
 using Microsoft.Data.Sqlite;
@@ -29,6 +31,11 @@ public static class DependencyInjection
         _ = services.AddDbContext<AulaPedidosDbContext>(options => options.UseSqlite(connectionString));
         _ = services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
         _ = services.AddScoped<IUnitOfWork, EfUnitOfWork>();
+        _ = services.AddScoped<IProductBulkWriter, EfProductBulkWriter>();
+        _ = services.AddSingleton(TimeProvider.System);
+        _ = services.AddSingleton<IBulkImportTracker, InMemoryBulkImportTracker>();
+        _ = services.AddSingleton<IBulkImportQueue, ChannelBulkImportQueue>();
+        _ = services.AddHostedService<BulkProductImportWorker>();
 
         var discountBaseUrl = configuration["ProductDiscount:BaseUrl"];
         if (string.IsNullOrWhiteSpace(discountBaseUrl))

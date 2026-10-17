@@ -1,3 +1,4 @@
+using AulaPedidos.Application.Products.BulkImport;
 using FluentValidation;
 using Mediator;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +14,7 @@ public static class DependencyInjection
         services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
         services.AddScoped<ISender>(serviceProvider => serviceProvider.GetRequiredService<IMediator>());
         services.AddScoped<IPublisher>(serviceProvider => serviceProvider.GetRequiredService<IMediator>());
+        services.AddScoped<BulkProductImportProcessor>();
 
         return services;
     }
