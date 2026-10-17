@@ -1,0 +1,6 @@
+services:
+  aulapedidos.api:
+    image: ${DOCKER_REGISTRY-}aulapedidosapi
+    build:
+      context: .
+      dockerfile: src/AulaPedidos.Api/Dockerfile

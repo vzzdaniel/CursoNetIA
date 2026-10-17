@@ -11,4 +11,7 @@
     <Project Path="tests/AulaPedidos.ArchitectureTests/AulaPedidos.ArchitectureTests.csproj" />
     <Project Path="tests/AulaPedidos.Infrastructure.Tests/AulaPedidos.Infrastructure.Tests.csproj" />
   </Folder>
+  <Project Path="docker-compose.dcproj">
+    <Build />
+  </Project>
 </Solution>
