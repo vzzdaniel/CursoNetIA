@@ -7,9 +7,7 @@ using AulaPedidos.Application.Products.BulkImport;
 using AulaPedidos.Application.Validation;
 using AulaPedidos.Infrastructure;
 using AulaPedidos.Infrastructure.Persistence;
-using Mediator;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
